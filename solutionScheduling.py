@@ -1,9 +1,6 @@
 from random import randint
 import numpy as np
 
-# Define shifts instead of courses. Each entry represents a time slot in a week.
-shifts = [{'name': f'{day}{period}', 'min_nurses': 2} for day in 'MTWTFS' for period in '123']
-
 # Add Saturday with possibly a different requirement
 
 nurses = ['空','甲', '乙', '丙', '丁', '戊']
@@ -11,18 +8,17 @@ nurses = ['空','甲', '乙', '丙', '丁', '戊']
 # Simplified: Just periods without specific rooms
 #periods = [f'{day}{period}' for day in 'MTWTF' for period in '123'] + [f'S{period}' for period in '123']
 periods = [
-'Mon Morning','Mon Afternoon','Mon Evening',
-'Tue Morning','Tue Afternoon','Tue Evening',
-'Wed Morning','Wed Afternoon','Wed Evening',
-'Thu Morning','Thu Afternoon','Thu Evening',
-'Fri Morning','Fri Afternoon','Fri Evening',
-'Sat Morning','Sat Afternoon','Sat Evening'
+'一 早上','一 下午','一 晚上',
+'二 早上','二 下午','二 晚上',
+'三 早上','三 下午','三 晚上',
+'四 早上','四 下午','四 晚上',
+'五 早上','五 下午','五 晚上',
+'六 早上','六 下午','六 晚上'
 ]
 
 cols = 3
 
-def randShift():
-    return randint(0, len(shifts)-1)
+
 def randPeriod():
     return randint(0, len(periods)-1)
 def randNurse():
@@ -94,8 +90,9 @@ class SolutionScheduling:
 
     @classmethod
     def init(cls):
-        fills = [[0, 0, 0] for _ in range(len(periods))]
-        for i in range(len(periods)):
-            for j in range(len(fills[i])):
-                fills[i][j] = randNurse()
+        fills = []
+        for _ in range(len(periods)):
+            # Assign three different nurses to each period, ensuring they are unique
+            period_nurses = np.random.choice(len(nurses), 3, replace=False).tolist()
+            fills.append(period_nurses)
         return SolutionScheduling(fills)
